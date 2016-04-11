@@ -75,11 +75,9 @@ def resolve_uri(uri):
     Ex:
         resolve_uri('/a_web_page.html') -> (b"<html><h1>North Carolina...",
                                             b"text/html")
-        )
 
         resolve_uri('/sample_1.png') -> (b"A12BCF...",  # contents of sample_1.png
                                          b"image/png")
-        )
 
         resolve_uri('/') -> (b"images/, a_web_page.html, make_type.py,...",
                              b"text/plain")
