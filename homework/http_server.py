@@ -89,11 +89,10 @@ def resolve_uri(uri):
     # TODO: Raise a NameError if the requested content is not present
     # under webroot.
 
-    # TODO: Fill content with the appropriate content, given the URI
+    # TODO: Fill in the appropriate content and mime_type give the URI.
+    # See the assignment guidelines for help on "mapping mime-types", though
+    # you might need to create a special case for handling make_time.py
     content = b"not implemented"
-
-    # TODO: Fill mime_type with the appropriate mime_type, given the URI
-    # See the assignment instructions with respect to mapping mime types.
     mime_type = b"not implemented"
 
     return content, mime_type
