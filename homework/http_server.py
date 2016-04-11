@@ -3,7 +3,26 @@ import sys
 
 
 def response_ok(body=b"this is a pretty minimal response", mimetype=b"text/plain"):
-    """returns a basic HTTP response"""
+    """
+    returns a basic HTTP response
+
+    Ex:
+        response_ok(
+            b"<html><h1>Welcome:</h1></html>",
+            b"text/html"
+        ) ->
+
+        b'''
+        HTTP/1.1 200 OK
+        Content-Type: text/html
+
+        <html><h1>Welcome:</h1></html>
+        '''
+
+    """
+
+    # TODO: Update response_body so that it uses the provided body
+    # and mimetype.
     resp = []
     resp.append(b"HTTP/1.1 200 OK")
     resp.append(b"Content-Type: text/plain")
@@ -22,6 +41,13 @@ def response_method_not_allowed():
 
 def response_not_found():
     """returns a 404 Not Found response"""
+
+    # TODO: Consruct and return a 404 response.
+    #
+    # See response_method_not_allowed for an example of
+    # another type of 4xx response. You will need to use
+    # the correct number (by changing "405") and also the
+    # correct statement (by changing "Method Not Allowed").
     return b""
 
 
@@ -34,14 +60,45 @@ def parse_request(request):
 
 
 def resolve_uri(uri):
-    """This method should return appropriate content and a mime type"""
+    """
+    This method should return appropriate content and a mime type.
 
-    print(uri)
+    If the requested URI is a directory, then the content should be a
+    plain-text listing of the contents with mimetype `text/plain`.
 
-    # TODO: Fill content
-    content = b"still broken"
+    If the URI is a file, it should return the contents of that file
+    and its correct mimetype.
 
-    return b"still broken", b"text/plain"
+    If the URI does not map to a real location, it should raise an
+    exception that the server can catch to return a 404 response.
+
+    Ex:
+        resolve_uri('/a_web_page.html') -> (b"<html><h1>North Carolina...",
+                                            b"text/html")
+        )
+
+        resolve_uri('/sample_1.png') -> (b"A12BCF...",  # contents of sample_1.png
+                                         b"image/png")
+        )
+
+        resolve_uri('/') -> (b"images/, a_web_page.html, make_type.py,...",
+                             b"text/plain")
+
+        resolve_uri('/a_page_that_doesnt_exist.html') -> Raises a NameError
+
+    """
+
+    # TODO: Raise a NameError if the requested content is not present
+    # under webroot.
+
+    # TODO: Fill content with the appropriate content, given the URI
+    content = b"not implemented"
+
+    # TODO: Fill mime_type with the appropriate mime_type, given the URI
+    # See the assignment instructions with respect to mapping mime types.
+    mime_type = b"not implemented"
+
+    return content, mime_type
 
 
 def server(log_buffer=sys.stderr):
