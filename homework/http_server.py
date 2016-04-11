@@ -21,7 +21,7 @@ def response_ok(body=b"this is a pretty minimal response", mimetype=b"text/plain
 
     """
 
-    # TODO: Update response_body so that it uses the provided body
+    # TODO: Update response_ok so that it uses the provided body
     # and mimetype.
     resp = []
     resp.append(b"HTTP/1.1 200 OK")
