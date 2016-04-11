@@ -35,6 +35,12 @@ def parse_request(request):
 
 def resolve_uri(uri):
     """This method should return appropriate content and a mime type"""
+
+    print(uri)
+
+    # TODO: Fill content
+    content = b"still broken"
+
     return b"still broken", b"text/plain"
 
 
