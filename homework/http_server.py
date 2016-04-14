@@ -92,6 +92,16 @@ def resolve_uri(uri):
     # TODO: Fill in the appropriate content and mime_type give the URI.
     # See the assignment guidelines for help on "mapping mime-types", though
     # you might need to create a special case for handling make_time.py
+
+    try os.path.exists:
+        return list directory content in text/plain
+    else os.path.isfile:
+        return content, mime_type
+    except IOerror
+        return 404 response
+    except NameError
+        if not webroot
+
     content = b"not implemented"
     mime_type = b"not implemented"
 
