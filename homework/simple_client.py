@@ -1,9 +1,8 @@
 import socket
 import sys
 
-
 def bytes_client(msg):
-    server_address = ('localhost', 10000)
+    server_address = ('127.0.0.1', 10001)
     sock = socket.socket(
         socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP
     )

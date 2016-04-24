@@ -10,9 +10,9 @@ def response_ok(body=b"this is a pretty minimal response", mimetype=b"text/plain
     # and mimetype.
     resp = []
     resp.append(b"HTTP/1.1 200 OK")
-    resp.append(b"".join(["Content-Type: ", mimetype]))
+    resp.append(b"".join([b"Content-Type: ", mimetype]))
     resp.append(b"")
-    resp.append(b"this is a pretty minimal response")
+    resp.append(body)
     return b"\r\n".join(resp)
 
 
@@ -74,7 +74,7 @@ def resolve_uri(uri):
 
 
 def server(log_buffer=sys.stderr):
-    address = ('127.0.0.1', 10000)
+    address = ('127.0.0.1', 10001)
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     print("making a server on {0}:{1}".format(*address), file=log_buffer)
@@ -90,7 +90,7 @@ def server(log_buffer=sys.stderr):
                 request = ''
                 while True:
                     data = conn.recv(1024)
-                    request += data
+                    request += data.decode('utf8')
                     if len(data) < 1024:
                         break
                 try:
@@ -99,7 +99,7 @@ def server(log_buffer=sys.stderr):
                     response = response_method_not_allowed()
                 else:
                     try:
-                        content, mime_type = resolve_uri(uri)
+                        content, mime_type = resolve_uri(uri, webroot)
                     except NameError:
                         response = response_not_found()
                     else:
