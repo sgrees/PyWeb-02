@@ -1,31 +1,16 @@
 import socket
 import sys
+import os
+import mimetypes
 
 
 def response_ok(body=b"this is a pretty minimal response", mimetype=b"text/plain"):
-    """
-    returns a basic HTTP response
-
-    Ex:
-        response_ok(
-            b"<html><h1>Welcome:</h1></html>",
-            b"text/html"
-        ) ->
-
-        b'''
-        HTTP/1.1 200 OK
-        Content-Type: text/html
-
-        <html><h1>Welcome:</h1></html>
-        '''
-
-    """
-
+    """returns a basic HTTP response"""
     # TODO: Update response_ok so that it uses the provided body
     # and mimetype.
     resp = []
     resp.append(b"HTTP/1.1 200 OK")
-    resp.append(b"Content-Type: text/plain")
+    resp.append(b"".join(["Content-Type: ", mimetype]))
     resp.append(b"")
     resp.append(b"this is a pretty minimal response")
     return b"\r\n".join(resp)
@@ -34,21 +19,23 @@ def response_ok(body=b"this is a pretty minimal response", mimetype=b"text/plain
 def response_method_not_allowed():
     """returns a 405 Method Not Allowed response"""
     resp = []
-    resp.append("HTTP/1.1 405 Method Not Allowed")
-    resp.append("")
-    return "\r\n".join(resp).encode('utf8')
+    resp.append(b"HTTP/1.1 405 Method Not Allowed")
+    resp.append(b"")
+    return b"\r\n".join(resp)
 
 
 def response_not_found():
     """returns a 404 Not Found response"""
-
     # TODO: Consruct and return a 404 response.
     #
     # See response_method_not_allowed for an example of
     # another type of 4xx response. You will need to use
     # the correct number (by changing "405") and also the
     # correct statement (by changing "Method Not Allowed").
-    return b""
+    resp = []
+    resp.append(b"HTTP/1.1 404 Not Found")
+    resp.append(b"")
+    return b"\r\n".join(resp)
 
 
 def parse_request(request):
@@ -60,51 +47,29 @@ def parse_request(request):
 
 
 def resolve_uri(uri):
+    """Returns appropriate content and a mime type for uri.
+    If the requested URI is a directory, returns plain-text listing of
+        contents with mimetype `text/plain`.
+    If the URI is a file, returns contents of that file and correct mimetype.
+    If the URI does not map to a real location, raises an
+        exception that the server can catch to return a 404 response.
     """
-    This method should return appropriate content and a mime type.
-
-    If the requested URI is a directory, then the content should be a
-    plain-text listing of the contents with mimetype `text/plain`.
-
-    If the URI is a file, it should return the contents of that file
-    and its correct mimetype.
-
-    If the URI does not map to a real location, it should raise an
-    exception that the server can catch to return a 404 response.
-
-    Ex:
-        resolve_uri('/a_web_page.html') -> (b"<html><h1>North Carolina...",
-                                            b"text/html")
-
-        resolve_uri('/sample_1.png') -> (b"A12BCF...",  # contents of sample_1.png
-                                         b"image/png")
-
-        resolve_uri('/') -> (b"images/, a_web_page.html, make_type.py,...",
-                             b"text/plain")
-
-        resolve_uri('/a_page_that_doesnt_exist.html') -> Raises a NameError
-
-    """
-
     # TODO: Raise a NameError if the requested content is not present
     # under webroot.
-
     # TODO: Fill in the appropriate content and mime_type give the URI.
     # See the assignment guidelines for help on "mapping mime-types", though
     # you might need to create a special case for handling make_time.py
-
-    try os.path.exists:
-        return list directory content in text/plain
-    else os.path.isfile:
-        return content, mime_type
-    except IOerror
-        return 404 response
-    except NameError
-        if not webroot
-
-    content = b"not implemented"
-    mime_type = b"not implemented"
-
+    webroot = "webroot/"
+    try:
+        if os.path.isfile(webroot + uri):
+            mime_type = mimetypes.guess_type(webroot + uri)
+            with open(webroot + uri, 'rb') as f:
+                content = f.read()
+        else:
+            mime_type = b'text/plain'
+            content = "\r\n".join(os.listdir(webroot + uri)).encode('utf8')
+    except IOError:
+        raise NameError("Resource doesn't exist")
     return content, mime_type
 
 
@@ -125,10 +90,9 @@ def server(log_buffer=sys.stderr):
                 request = ''
                 while True:
                     data = conn.recv(1024)
-                    request += data.decode('utf8')
+                    request += data
                     if len(data) < 1024:
                         break
-
                 try:
                     uri = parse_request(request)
                 except NotImplementedError:
