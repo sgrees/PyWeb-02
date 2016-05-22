@@ -62,7 +62,7 @@ def resolve_uri(uri):
     webroot = "webroot/"
     try:
         if os.path.isfile(webroot + uri):
-            mime_type = mimetypes.guess_type(webroot + uri)
+            mime_type = mimetypes.guess_type(webroot + uri)[0].encode('utf8')
             with open(webroot + uri, 'rb') as f:
                 content = f.read()
         else:
@@ -99,7 +99,7 @@ def server(log_buffer=sys.stderr):
                     response = response_method_not_allowed()
                 else:
                     try:
-                        content, mime_type = resolve_uri(uri, webroot)
+                        content, mime_type = resolve_uri(uri)
                     except NameError:
                         response = response_not_found()
                     else:
